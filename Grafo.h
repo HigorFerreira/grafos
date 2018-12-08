@@ -49,6 +49,19 @@ class Grafo
 			int v1, v2, peso;
 			public:
 				int getPeso(){ return this->peso; }
+				int getV1(){ return this->v1; }
+				int getV2(){ return this->v2; }
+		};
+		
+		class Celula{
+			public:
+				int vertice, peso;
+				
+				Celula(int v, int p){ this->vertice = v; this->peso = p; }
+				bool equals(Celula *obj){
+					Celula *item = obj;
+					return (this->vertice == item->vertice);
+				}
 		};
 };
 

@@ -5,6 +5,9 @@
 
 using namespace std;
 
+//O código do libro está em javascript e é de difícil compreensão.
+//Tentaremos uma solução com um código totalente desenvolvido por nós.
+
 class Grafo
 {
 	private:

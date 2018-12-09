@@ -10,8 +10,15 @@ using namespace std;
 class Grafo
 {
 	private:
+		//Matriz de adjacência
 		int **matriz;
+		//Array de cores dos vértices
+		int *cores = 0;
+		//Número total de vértices
+		int numVertices;
+		//Indicação se o grafo é orientado
 		bool digrafo = false;
+		//Indicação se o grafo é ponderado
 		bool ponderado = false;
 		
 		//Cores para os vértices
@@ -21,6 +28,8 @@ class Grafo
 		
 		//Criação de grafo
 		criaGrafo(int numVertices){
+			//Armazenando o número total de vértices
+			this->numVertices =  numVertices;
 			//Criação da matriz de adjacência
 			this->matriz = new int*[numVertices];
 			for(int i = 0; i < numVertices; i++){
@@ -31,7 +40,7 @@ class Grafo
 				for(int j; j < numVertices; j++){
 					this->matriz[i][j] = 0;
 				}
-			}			
+			}
 		}
 		
 		inserir(int origem, int destino, int peso){
@@ -96,7 +105,14 @@ class Grafo
 			return true;
 		}
 		
-		
+		//Busca em profundidade
+		bool busca(){
+			//Definindo o array de cores
+			int *cores = new int[this->numVertices];
+			//Colorindo os vértices de branco
+			for(int i = 0; i < this->numVertices; i ++)
+				cores[i] = branco;
+		}
 };
 
 #endif

@@ -14,6 +14,11 @@ class Grafo
 		bool digrafo = false;
 		bool ponderado = false;
 		
+		//Cores para os vértices
+		const int branco = 0;
+		const int cinza = 1;
+		const int preto = 2;
+		
 		//Criação de grafo
 		criaGrafo(int numVertices){
 			//Criação da matriz de adjacência
@@ -90,6 +95,8 @@ class Grafo
 			
 			return true;
 		}
+		
+		
 };
 
 #endif

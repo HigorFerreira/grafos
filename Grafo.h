@@ -41,6 +41,12 @@ class Grafo
 					this->matriz[i][j] = 0;
 				}
 			}
+			
+			//Alocando o array de cores
+			int *cores = new int[this->numVertices];
+			//Colorindo os vértices de branco
+			for(int i = 0; i < this->numVertices; i ++)
+				cores[i] = branco;
 		}
 		
 		inserir(int origem, int destino, int peso){
@@ -107,11 +113,6 @@ class Grafo
 		
 		//Busca em profundidade
 		bool busca(){
-			//Definindo o array de cores
-			int *cores = new int[this->numVertices];
-			//Colorindo os vértices de branco
-			for(int i = 0; i < this->numVertices; i ++)
-				cores[i] = branco;
 		}
 };
 

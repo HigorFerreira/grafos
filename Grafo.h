@@ -14,6 +14,7 @@ class Grafo
 		bool digrafo = false;
 		bool ponderado = false;
 		
+		//Criação de grafo
 		criaGrafo(int numVertices){
 			//Criação da matriz de adjacência
 			this->matriz = new int*[numVertices];
@@ -28,6 +29,15 @@ class Grafo
 			}			
 		}
 		
+		inserir(int origem, int destino, int peso){
+			if(digrafo){
+				this->matriz[origem][destino] = peso;
+			}
+			else{
+				this->matriz[origem][destino] = peso;
+				this->matriz[destino][origem] = peso;
+			}
+		}
 	public:
 		//O grafo padrão a ser criado será um não orientado e não ponderado
 		Grafo(int numVertices){
@@ -46,14 +56,39 @@ class Grafo
 			criaGrafo(numVertices);
 		}
 		
+		//Insersão para grafos não ponderados
 		bool inserirAresta(int origem, int destino){
-			if(digrafo){
-				this->matriz[origem][destino] = 1;
+			//Tratando inserção sem peso
+			if(this->ponderado) return false;
+			//Inserindo
+			inserir(origem, destino, 1);
+			
+			return true;
+		}
+		
+		//Inserção para grafos ponderados
+		bool inserirAresta(int origem, int destino, int peso){
+			//Tratando inserção incorreta em grafo
+			if(this->ponderado) return false;
+			//Inserindo
+			inserir(origem, destino, peso);
+			
+			return true;
+		}
+		
+		//Remoção de aresta
+		bool removerAresta(int origem, int destino){
+			if(this->digrafo){
+				if(this->matriz[origem][destino] == 0) return false;
+				this->matriz[origem][destino] = 0;
 			}
 			else{
-				this->matriz[origem][destino] = 1;
-				this->matriz[destino][origem] = 1;
+				if(this->matriz[origem][destino] == 0 || this->matriz[destino][origem] == 0) return false;
+				this->matriz[origem][destino] = 0;
+				this->matriz[destino][origem] = 0;
 			}
+			
+			return true;
 		}
 };
 

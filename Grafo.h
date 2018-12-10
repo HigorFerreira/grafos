@@ -10,6 +10,7 @@ using namespace std;
 struct busca_response{
 	int *cores;
 	int *tempos;
+	int nVertices;
 };
 
 class Grafo
@@ -200,6 +201,8 @@ class Grafo
 						}
 						//Colocando o vetor de cores
 						res->cores = coresRes;
+						//Colocando o número de vértices
+						res->nVertices = gr->getNumVetices();
 				}
 				
 				//Buscando vértice adjacente branco
@@ -230,6 +233,8 @@ class Grafo
 						}
 						//Colocando o vetor de cores
 						res->cores = coresRes;
+						//Colocando o número de vértices
+						res->nVertices = gr->getNumVetices();
 				}
 			}
 		}

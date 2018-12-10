@@ -15,4 +15,7 @@ int main(){
 	grafo->inserirAresta(4, 3);
 	grafo->inserirAresta(5, 4);
 	grafo->inserirAresta(5, 0);
+	
+	//Teste de busca em profundidade
+	busca_response *res = Grafo::busca(grafo, 0, 0);
 }

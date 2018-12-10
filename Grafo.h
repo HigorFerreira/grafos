@@ -15,6 +15,9 @@ struct busca_response{
 
 class Grafo
 {
+	//Variáveis públicas
+	public:
+		int *tempoAtual;
 	private:
 		//Matriz de adjacência
 		int **matriz;
@@ -29,6 +32,7 @@ class Grafo
 		
 		//Criação de grafo
 		criaGrafo(int numVertices){
+			this->tempoAtual = new int(0);
 			//Armazenando o número total de vértices
 			this->numVertices =  numVertices;
 			//Criação da matriz de adjacência
@@ -37,14 +41,14 @@ class Grafo
 				this->matriz[i] = new int[numVertices];
 			}
 			//Populando a matriz com 0
-			for(int i; i < numVertices; i++){
+			for(int i = 0; i < numVertices; i++){
 				for(int j; j < numVertices; j++){
 					this->matriz[i][j] = 0;
 				}
 			}
 			
 			//Alocando o array de cores
-			int *cores = new int[this->numVertices];
+			this->cores = new int[this->numVertices];
 			//Colorindo os vértices de branco
 			for(int i = 0; i < this->numVertices; i ++)
 				cores[i] = branco;
@@ -61,10 +65,7 @@ class Grafo
 			}
 		}
 		
-	public:
-		//Variável para guardar o tempo atual para o algoritmo de busca em profundidade
-		int *tempoAtual = new int(0);
-		
+	public:		
 		//Cores para os vértices
 		const int branco = 0;
 		const int cinza = 1;

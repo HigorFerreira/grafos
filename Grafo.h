@@ -2,8 +2,7 @@
 #define GRAFO_H
 
 #include<iostream>
-
-using namespace std;
+#include<vector>
 
 using namespace std;
 
@@ -20,11 +19,6 @@ class Grafo
 		bool digrafo = false;
 		//Indicação se o grafo é ponderado
 		bool ponderado = false;
-		
-		//Cores para os vértices
-		const int branco = 0;
-		const int cinza = 1;
-		const int preto = 2;
 		
 		//Criação de grafo
 		criaGrafo(int numVertices){
@@ -49,6 +43,7 @@ class Grafo
 				cores[i] = branco;
 		}
 		
+		//Inserir aresta no grafo
 		inserir(int origem, int destino, int peso){
 			if(digrafo){
 				this->matriz[origem][destino] = peso;
@@ -58,7 +53,21 @@ class Grafo
 				this->matriz[destino][origem] = peso;
 			}
 		}
+		
+		//Estrutura de resposta ao se chamar a busca em profundidade
+		struct busca_response{
+			vector<int> *cores;
+			vector<int> *tempos;
+		};
 	public:
+		//Variável para guardar o tempo atual para o algoritmo de busca em profundidade
+		int *tempoAtual = new int(0);
+		
+		//Cores para os vértices
+		const int branco = 0;
+		const int cinza = 1;
+		const int preto = 2;
+		
 		//O grafo padrão a ser criado será um não orientado e não ponderado
 		Grafo(int numVertices){
 			criaGrafo(numVertices);
@@ -111,8 +120,96 @@ class Grafo
 			return true;
 		}
 		
+		//Obter lista de adjacentes de um vértice
+		vector<int> *adj(int vertice){
+			vector<int> *adjs = new vector<int>;
+			if(this->digrafo){
+				for(int i = 0; i < this->numVertices; i++){
+					if(this->matriz[vertice][i] != 0)
+							adjs->push_back(i);
+					}
+			}
+			else{
+				//algoritmo do grafo não direcionado
+				
+				//** ------------------- TO DO --------------------- ******
+			}
+			
+			return adjs;
+		}
+		
+		//Obter a matriz de adjacencia
+		int **getMatriz(){
+			return this->matriz;
+		}
+		
+		//Obter as cores dos vértices
+		int *getCores(){
+			return this->cores;
+		}
+		
+		//Obter o número de vértices da matriz
+		int getNumVetices(){
+			return this->numVertices;
+		}
+		
 		//Busca em profundidade
-		bool busca(){
+		static int busca(Grafo *gr, int ini, int tempo){
+			//Guardando o tempo atual
+			*gr->tempoAtual = tempo;
+			//Matriz de adjacencia do grafo
+			int *matriz = gr->getMatriz();
+			//Matriz com as cores dos vértices do grafo
+			int *cores = gr->getCores;
+			//Matriz de tempos
+			int *tempos = new int[gr->getNumVetices];
+			
+			if(cores[ini] == Grafo::branco){
+				//Atribuindo tempo ao vértice
+				tempos[ini] = ++(*gr->tempoAtual);
+				//Pintando o vértice de cinza
+				cores[ini] = Grafo::cinza;
+				//Lista de adjacencia do vértice fornecido
+				vector<int> *adjacentes = Grafo->adj();
+				//Obtendo o primeiro vértice branco
+				int proximo = -1;
+				for(int i = 0; i < adjacentes.size(); i++){
+					if(cores[adjacentes[i]] == Grafo::branco){
+						proximo = adjacentes[i];
+						break;
+					}
+				}
+				//Chamando o próximo vértice ou pintando de preto
+				if(proximo > -1){
+					Grafo::busca(gr, proximo; tempo);
+				}
+				else{
+					tempos[ini] = ++tempo;
+					cores[ini] = Grafo::preto;
+					
+					//Encerrando o método
+				}
+				
+				//Atribuindo tempo ao vértice
+				tempos[ini] = ++(*gr->tempoAtual);
+				
+				//Buscando vértice adjacente branco
+				int proximo = -1;
+				for(int i = 0; i < adjacentes.size(); i++){
+					if(cores[adjacentes[i]] == Grafo::branco){
+						proximo = adjacentes[i];
+						break;
+					}
+				}
+				//Chamando o próximo vértice ou pintando de preto
+				if(proximo > -1){
+					Grafo::busca(gr, proximo; tempo);
+				}
+				else{
+					tempos[ini] = ++(*gr->tempoAtual);
+					cores[ini] = Grafo::preto;
+				}
+			}
 		}
 };
 

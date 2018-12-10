@@ -6,6 +6,12 @@
 
 using namespace std;
 
+//Estrutura de resposta ao se chamar a busca em profundidade
+struct busca_response{
+	int *cores;
+	int *tempos;
+};
+
 class Grafo
 {
 	private:
@@ -54,11 +60,6 @@ class Grafo
 			}
 		}
 		
-		//Estrutura de resposta ao se chamar a busca em profundidade
-		struct busca_response{
-			vector<int> *cores;
-			vector<int> *tempos;
-		};
 	public:
 		//Variável para guardar o tempo atual para o algoritmo de busca em profundidade
 		int *tempoAtual = new int(0);
@@ -154,60 +155,81 @@ class Grafo
 		}
 		
 		//Busca em profundidade
-		static int busca(Grafo *gr, int ini, int tempo){
+		static busca_response *busca(Grafo *gr, int ini, int tempo){
 			//Guardando o tempo atual
 			*gr->tempoAtual = tempo;
 			//Matriz de adjacencia do grafo
-			int *matriz = gr->getMatriz();
+			int **matriz = gr->getMatriz();
 			//Matriz com as cores dos vértices do grafo
-			int *cores = gr->getCores;
+			int *cores = gr->getCores();
 			//Matriz de tempos
-			int *tempos = new int[gr->getNumVetices];
+			int *tempos = new int[gr->getNumVetices()];
 			
-			if(cores[ini] == Grafo::branco){
+			if(cores[ini] == gr->branco){
 				//Atribuindo tempo ao vértice
 				tempos[ini] = ++(*gr->tempoAtual);
 				//Pintando o vértice de cinza
-				cores[ini] = Grafo::cinza;
+				cores[ini] = gr->cinza;
 				//Lista de adjacencia do vértice fornecido
-				vector<int> *adjacentes = Grafo->adj();
+				vector<int> *adjacentes = gr->adj(ini);
 				//Obtendo o primeiro vértice branco
 				int proximo = -1;
-				for(int i = 0; i < adjacentes.size(); i++){
-					if(cores[adjacentes[i]] == Grafo::branco){
-						proximo = adjacentes[i];
+				for(int i = 0; i < adjacentes->size(); i++){
+					if(cores[adjacentes->at(i)] == gr->branco){
+						proximo = adjacentes->at(i);
 						break;
 					}
 				}
 				//Chamando o próximo vértice ou pintando de preto
 				if(proximo > -1){
-					Grafo::busca(gr, proximo; tempo);
+					Grafo::busca(gr, proximo, tempo);
 				}
 				else{
 					tempos[ini] = ++tempo;
-					cores[ini] = Grafo::preto;
+					cores[ini] = gr->preto;
 					
 					//Encerrando o método
+						//Montando o objeto de resposta
+						busca_response *res = new busca_response;
+						//Colocando o vetor de tempos
+						res->tempos = tempos;
+						//Copiando o vetor de cores
+						int *coresRes = new int[gr->getNumVetices()];
+						for(int i = 0; i < gr->getNumVetices(); i++){
+							coresRes[i] = cores[i];
+						}
+						//Colocando o vetor de cores
+						res->cores = coresRes;
 				}
 				
-				//Atribuindo tempo ao vértice
-				tempos[ini] = ++(*gr->tempoAtual);
-				
 				//Buscando vértice adjacente branco
-				int proximo = -1;
-				for(int i = 0; i < adjacentes.size(); i++){
-					if(cores[adjacentes[i]] == Grafo::branco){
-						proximo = adjacentes[i];
+				int proximo2 = -1;
+				for(int i = 0; i < adjacentes->size(); i++){
+					if(cores[adjacentes->at(i)] == gr->branco){
+						proximo2 = adjacentes->at(i);
 						break;
 					}
 				}
 				//Chamando o próximo vértice ou pintando de preto
-				if(proximo > -1){
-					Grafo::busca(gr, proximo; tempo);
+				if(proximo2 > -1){
+					Grafo::busca(gr, proximo2, tempo);
 				}
 				else{
 					tempos[ini] = ++(*gr->tempoAtual);
-					cores[ini] = Grafo::preto;
+					cores[ini] = gr->preto;
+					
+					//Encerrando o método
+						//Montando o objeto de resposta
+						busca_response *res = new busca_response;
+						//Colocando o vetor de tempos
+						res->tempos = tempos;
+						//Copiando o vetor de cores
+						int *coresRes = new int[gr->getNumVetices()];
+						for(int i = 0; i < gr->getNumVetices(); i++){
+							coresRes[i] = cores[i];
+						}
+						//Colocando o vetor de cores
+						res->cores = coresRes;
 				}
 			}
 		}

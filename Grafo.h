@@ -47,7 +47,7 @@ class Grafo
 			}
 			
 			//Alocando o array de cores
-			int *cores = new int[this->numVertices];
+			this->cores = new int[this->numVertices];
 			//Colorindo os vértices de branco
 			for(int i = 0; i < this->numVertices; i ++)
 				cores[i] = branco;

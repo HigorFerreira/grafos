@@ -24,4 +24,10 @@ int main(){
 		cout<<res->tempos[i]<<" ";
 	}
 	cout<<endl;
+	
+	//Impressão do vetor de cores
+	for(int i = 0; i < grafo->getNumVetices(); i++){
+		cout<<res->cores[i]<<" ";
+	}
+	cout<<endl;
 }

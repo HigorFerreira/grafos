@@ -156,6 +156,8 @@ class Grafo
 			return this->numVertices;
 		}
 		
+		//*********** BUSCA EM PROFUNDIDADE NÃO ESTÁ FUNCIONANDO ********************************
+		
 		//Busca em profundidade
 		static busca_response *busca(Grafo *gr, int ini, int tempo){
 			//Guardando o tempo atual

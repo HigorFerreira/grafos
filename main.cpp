@@ -17,17 +17,7 @@ int main(){
 	grafo->inserirAresta(5, 0);
 	
 	//Teste de busca em profundidade
-	busca_response *res = Grafo::busca(grafo, 0, 0);
-	
-	//Impressão do vetor de tempos
-	for(int i = 0; i < grafo->getNumVetices(); i++){
-		cout<<res->tempos[i]<<" ";
-	}
-	cout<<endl;
-	
-	//Impressão do vetor de cores
-	for(int i = 0; i < grafo->getNumVetices(); i++){
-		cout<<res->cores[i]<<" ";
-	}
-	cout<<endl;
+	int tempo = 2;
+	busca_response *res = Grafo::buscap(grafo, 0, &tempo, 0);
+	cout<<"Valor atual "<<tempo<<endl;
 }

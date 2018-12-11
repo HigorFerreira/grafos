@@ -157,6 +157,37 @@ class Grafo
 		}
 		
 		//Busca em profundidade
+		static busca_response *buscap(Grafo *gr, int ini, int *tempo, busca_response *res){
+			
+			//Condições iniciais
+			int *time;
+			if(tempo == 0){
+				time = new int(0);
+			}
+			else{
+				time = tempo;
+			}
+			
+			int *colors;
+			int *tempos;
+			
+			if(res == 0){
+				//Cópia do vetor de cores
+				colors = new int[gr->getNumVetices()];
+				for(int i = 0; i < gr->getNumVetices(); i++){
+					colors[i] = gr->getCores()[i];
+				}
+				//Criação da matriz de tempos
+				tempos = new int[gr->getNumVetices()];
+				for(int i = 0; i < gr->getNumVetices(); i++){
+					tempos[i] = 0;
+				}
+			}
+			else{
+				colors = res->cores;
+				tempos = res->tempos;
+			}
+		}
 		
 };
 

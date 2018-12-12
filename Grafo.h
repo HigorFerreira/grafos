@@ -30,7 +30,7 @@ class Grafo
 		bool ponderado = false;
 		
 		//Criação de grafo
-		criaGrafo(int numVertices){
+        void criaGrafo(int numVertices){
 			this->tempoAtual = new int(0);
 			//Armazenando o número total de vértices
 			this->numVertices =  numVertices;
@@ -54,7 +54,7 @@ class Grafo
 		}
 		
 		//Inserir aresta no grafo
-		inserir(int origem, int destino, int peso){
+        void inserir(int origem, int destino, int peso){
 			if(digrafo){
 				this->matriz[origem][destino] = peso;
 			}

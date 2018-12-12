@@ -43,7 +43,7 @@ class Grafo
 			}
 			//Populando a matriz com 0
 			for(int i = 0; i < numVertices; i++){
-				for(int j; j < numVertices; j++){
+                for(int j = 0; j < numVertices; j++){
 					this->matriz[i][j] = 0;
 				}
 			}

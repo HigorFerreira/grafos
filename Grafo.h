@@ -22,6 +22,8 @@ class Grafo
 		int **matriz;
 		//Array de cores dos vértices
 		int *cores = 0;
+        //Array de tempos dos vértices
+        int *tempos = 0;
 		//Número total de vértices
 		int numVertices;
 		//Indicação se o grafo é orientado
@@ -51,6 +53,11 @@ class Grafo
 			//Colorindo os vértices de branco
 			for(int i = 0; i < this->numVertices; i ++)
 				cores[i] = branco;
+            //Alocando o array de tempos
+            this->tempos = new int[this->numVertices];
+            //Setando os tempos para zero
+            for(int i = 0; i < this->numVertices; i++)
+                tempos[i] = 0;
 		}
 		
 		//Inserir aresta no grafo
@@ -149,6 +156,11 @@ class Grafo
 		int *getCores(){
 			return this->cores;
 		}
+
+        //Obter os tempos dos vértices
+        int *getTempos(){
+            return this->tempos;
+        }
 		
 		//Obter o número de vértices da matriz
 		int getNumVetices(){
@@ -164,7 +176,7 @@ class Grafo
 			//Matriz com as cores dos vértices do grafo
 			int *cores = gr->getCores();
 			//Matriz de tempos
-			int *tempos = new int[gr->getNumVetices()];
+            int *tempos = gr->getTempos();
 			
 			if(cores[ini] == gr->branco){
 				//Atribuindo tempo ao vértice

@@ -1,52 +1,283 @@
 #ifndef GRAFO_H
 #define GRAFO_H
 
-#include<list>
+#include<iostream>
+#include<vector>
 
 using namespace std;
 
-//O código do libro está em javascript e é de difícil compreensão.
-//Tentaremos uma solução com um código totalente desenvolvido por nós.
+//Estrutura de resposta ao se chamar a busca em profundidade
+struct busca_response{
+	int *cores;
+	int *tempos;
+	int nVertices;
+};
 
 class Grafo
 {
-	private:
-		int numVertices;
-		
+	//Variï¿½veis pï¿½blicas
 	public:
-		class Aresta{
-			int v1, v2, peso;
-			public:
-				int getPeso(){ return this->peso; }
-				int getV1(){ return this->v1; }
-				int getV2(){ return this->v2; }
-		};
+		int *tempoAtual;
+	private:
+		//Matriz de adjacï¿½ncia
+		int **matriz;
+		//Array de cores dos vï¿½rtices
+		int *cores = 0;
+        //Array de tempos dos vï¿½rtices
+        int *tempos = 0;
+		//Nï¿½mero total de vï¿½rtices
+		int numVertices;
+		//Indicaï¿½ï¿½o se o grafo ï¿½ orientado
+		bool digrafo = false;
+		//Indicaï¿½ï¿½o se o grafo ï¿½ ponderado
+		bool ponderado = false;
 		
-		class Celula{
-			public:
-				int vertice, peso;
-				
-				Celula(int v, int p){ this->vertice = v; this->peso = p; }
-				bool equals(Celula *obj){
-					Celula *item = obj;
-					return (this->vertice == item->vertice);
+		//Criaï¿½ï¿½o de grafo
+        void criaGrafo(int numVertices){
+			this->tempoAtual = new int(0);
+			//Armazenando o nï¿½mero total de vï¿½rtices
+			this->numVertices =  numVertices;
+			//Criaï¿½ï¿½o da matriz de adjacï¿½ncia
+			this->matriz = new int*[numVertices];
+			for(int i = 0; i < numVertices; i++){
+				this->matriz[i] = new int[numVertices];
+			}
+			//Populando a matriz com 0
+			for(int i = 0; i < numVertices; i++){
+                for(int j = 0; j < numVertices; j++){
+					this->matriz[i][j] = 0;
 				}
-		};
+			}
+			
+			//Alocando o array de cores
+			this->cores = new int[this->numVertices];
+			//Colorindo os vï¿½rtices de branco
+			for(int i = 0; i < this->numVertices; i ++)
+				cores[i] = branco;
+            //Alocando o array de tempos
+            this->tempos = new int[this->numVertices];
+            //Setando os tempos para zero
+            for(int i = 0; i < this->numVertices; i++)
+                tempos[i] = 0;
+		}
 		
-		list<int> *adj;
-		int numVetices;
-		
-		Grafo(int numVertices){
-			this->adj = new list<Celula>[numVertices];
-			this->numVertices = numVertices;
-			for(int i = 0; i < this->numVertices; i++){
-				this->adj[i] = new list<Celula>;
+		//Inserir aresta no grafo
+        void inserir(int origem, int destino, int peso){
+			if(digrafo){
+				this->matriz[origem][destino] = peso;
+			}
+			else{
+				this->matriz[origem][destino] = peso;
+				this->matriz[destino][origem] = peso;
 			}
 		}
 		
-		void insereAresta(int v1, int v2, int peso){
-			Celula *item = new Celula(v2, peso);
-			this->adj[v1].push_back(item);
+	public:		
+		//Cores para os vï¿½rtices
+		const int branco = 0;
+		const int cinza = 1;
+		const int preto = 2;
+		
+		//O grafo padrï¿½o a ser criado serï¿½ um nï¿½o orientado e nï¿½o ponderado
+		Grafo(int numVertices){
+			criaGrafo(numVertices);
+		}
+		
+		//Pode-se escolher o tipo de grafo a ser utilizado passando-se um valor inteiro
+		// ***   0  -  Grafo nï¿½o orientado e nï¿½o ponderado
+		// ***   1  -  Grafo orientado e nï¿½o ponderado
+		// ***   2  -  Grafo nï¿½o orientado e ponderado
+		// ***   3  -  Grafo orientado e ponderado
+		Grafo(int numVertices, int options){
+			digrafo = (bool)(options & 1);
+			ponderado = (bool)(options & 2);
+			
+			criaGrafo(numVertices);
+		}
+		
+		//Insersï¿½o para grafos nï¿½o ponderados
+		bool inserirAresta(int origem, int destino){
+			//Tratando inserï¿½ï¿½o sem peso
+			if(this->ponderado) return false;
+			//Inserindo
+			inserir(origem, destino, 1);
+			
+			return true;
+		}
+		
+		//Inserï¿½ï¿½o para grafos ponderados
+		bool inserirAresta(int origem, int destino, int peso){
+			//Tratando inserï¿½ï¿½o incorreta em grafo
+			if(this->ponderado) return false;
+			//Inserindo
+			inserir(origem, destino, peso);
+			
+			return true;
+		}
+		
+		//Remoï¿½ï¿½o de aresta
+		bool removerAresta(int origem, int destino){
+			if(this->digrafo){
+				if(this->matriz[origem][destino] == 0) return false;
+				this->matriz[origem][destino] = 0;
+			}
+			else{
+				if(this->matriz[origem][destino] == 0 || this->matriz[destino][origem] == 0) return false;
+				this->matriz[origem][destino] = 0;
+				this->matriz[destino][origem] = 0;
+			}
+			
+			return true;
+		}
+		
+		//Obter lista de adjacentes de um vï¿½rtice
+		vector<int> *adj(int vertice){
+			vector<int> *adjs = new vector<int>;
+			if(this->digrafo){
+				for(int i = 0; i < this->numVertices; i++){
+					if(this->matriz[vertice][i] != 0)
+							adjs->push_back(i);
+					}
+			}
+			else{
+				//algoritmo do grafo nï¿½o direcionado
+				
+				//** ------------------- TO DO --------------------- ******
+			}
+			
+			return adjs;
+		}
+		
+		//Obter a matriz de adjacencia
+		int **getMatriz(){
+			return this->matriz;
+		}
+		
+		//Obter as cores dos vï¿½rtices
+		int *getCores(){
+			return this->cores;
+		}
+
+        //Obter os tempos dos vï¿½rtices
+        int *getTempos(){
+            return this->tempos;
+        }
+		
+		//Obter o nï¿½mero de vï¿½rtices da matriz
+		int getNumVetices(){
+			return this->numVertices;
+		}
+		
+		//*********** BUSCA EM PROFUNDIDADE Nï¿½O ESTï¿½ FUNCIONANDO ********************************
+		
+		//Busca em profundidade
+		static busca_response *busca(Grafo *gr, int ini, int tempo){
+			//Guardando o tempo atual
+			*gr->tempoAtual = tempo;
+			//Matriz de adjacencia do grafo
+			int **matriz = gr->getMatriz();
+			//Matriz com as cores dos vï¿½rtices do grafo
+			int *cores = gr->getCores();
+			//Matriz de tempos
+            int *tempos = gr->getTempos();
+			
+			if(cores[ini] == gr->branco){
+				//Atribuindo tempo ao vï¿½rtice
+				tempos[ini] = ++(*gr->tempoAtual);
+				//Pintando o vï¿½rtice de cinza
+				cores[ini] = gr->cinza;
+				//Lista de adjacencia do vï¿½rtice fornecido
+				vector<int> *adjacentes = gr->adj(ini);
+				//Obtendo o primeiro vï¿½rtice branco
+				int proximo = -1;
+				for(int i = 0; i < adjacentes->size(); i++){
+					if(cores[adjacentes->at(i)] == gr->branco){
+						proximo = adjacentes->at(i);
+						break;
+					}
+				}
+				//Chamando o prï¿½ximo vï¿½rtice ou pintando de preto
+				if(proximo > -1){
+                    Grafo::busca(gr, proximo, *gr->tempoAtual);
+				}
+				else{
+                    tempos[ini] = ++(*gr->tempoAtual);
+					cores[ini] = gr->preto;
+					
+					//Encerrando o mï¿½todo
+                        //Montando o objeto de resposta
+                        busca_response *res = new busca_response;
+                        //Colocando o vetor de tempos
+                        res->tempos = tempos;
+                        //Copiando o vetor de cores
+                        int *coresRes = new int[gr->getNumVetices()];
+                        for(int i = 0; i < gr->getNumVetices(); i++){
+                            coresRes[i] = cores[i];
+                        }
+                        //Colocando o vetor de cores
+                        res->cores = coresRes;
+                        return res;
+				}
+				
+				//Buscando vï¿½rtice adjacente branco
+				int proximo2 = -1;
+				for(int i = 0; i < adjacentes->size(); i++){
+					if(cores[adjacentes->at(i)] == gr->branco){
+						proximo2 = adjacentes->at(i);
+						break;
+					}
+				}
+				//Chamando o prï¿½ximo vï¿½rtice ou pintando de preto
+				if(proximo2 > -1){
+                    Grafo::busca(gr, proximo2, *gr->tempoAtual);
+				}
+				else{
+					tempos[ini] = ++(*gr->tempoAtual);
+					cores[ini] = gr->preto;
+					
+					//Encerrando o mï¿½todo
+						//Montando o objeto de resposta
+						busca_response *res = new busca_response;
+						//Colocando o vetor de tempos
+						res->tempos = tempos;
+						//Copiando o vetor de cores
+						int *coresRes = new int[gr->getNumVetices()];
+						for(int i = 0; i < gr->getNumVetices(); i++){
+							coresRes[i] = cores[i];
+						}
+						//Colocando o vetor de cores
+						res->cores = coresRes;
+                        return res;
+				}
+
+                //Testando se o vertice atual ainda e cinza
+                if(cores[ini] == gr->cinza){
+                    tempos[ini] = ++(*gr->tempoAtual);
+                    cores[ini] = gr->preto;
+                }
+
+                //Buscando vertices brancos
+                for(int brancoRestante = 0; brancoRestante < gr->getNumVetices(); brancoRestante++){
+                    if(cores[brancoRestante] == gr->branco){
+                        Grafo::busca(gr, brancoRestante, *gr->tempoAtual);
+                        break;
+                    }
+                }
+
+                //Encerrando o mï¿½todo
+                    //Montando o objeto de resposta
+                    busca_response *res = new busca_response;
+                    //Colocando o vetor de tempos
+                    res->tempos = tempos;
+                    //Copiando o vetor de cores
+                    int *coresRes = new int[gr->getNumVetices()];
+                    for(int i = 0; i < gr->getNumVetices(); i++){
+                        coresRes[i] = cores[i];
+                    }
+                    //Colocando o vetor de cores
+                    res->cores = coresRes;
+                    return res;
+			}
 		}
 };
 

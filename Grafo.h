@@ -195,24 +195,25 @@ class Grafo
 				}
 				//Chamando o próximo vértice ou pintando de preto
 				if(proximo > -1){
-					Grafo::busca(gr, proximo, tempo);
+                    Grafo::busca(gr, proximo, *gr->tempoAtual);
 				}
 				else{
-					tempos[ini] = ++tempo;
+                    tempos[ini] = ++(*gr->tempoAtual);
 					cores[ini] = gr->preto;
 					
 					//Encerrando o método
-						//Montando o objeto de resposta
-						busca_response *res = new busca_response;
-						//Colocando o vetor de tempos
-						res->tempos = tempos;
-						//Copiando o vetor de cores
-						int *coresRes = new int[gr->getNumVetices()];
-						for(int i = 0; i < gr->getNumVetices(); i++){
-							coresRes[i] = cores[i];
-						}
-						//Colocando o vetor de cores
-						res->cores = coresRes;
+                        //Montando o objeto de resposta
+                        busca_response *res = new busca_response;
+                        //Colocando o vetor de tempos
+                        res->tempos = tempos;
+                        //Copiando o vetor de cores
+                        int *coresRes = new int[gr->getNumVetices()];
+                        for(int i = 0; i < gr->getNumVetices(); i++){
+                            coresRes[i] = cores[i];
+                        }
+                        //Colocando o vetor de cores
+                        res->cores = coresRes;
+                        return res;
 				}
 				
 				//Buscando vértice adjacente branco
@@ -225,7 +226,7 @@ class Grafo
 				}
 				//Chamando o próximo vértice ou pintando de preto
 				if(proximo2 > -1){
-					Grafo::busca(gr, proximo2, tempo);
+                    Grafo::busca(gr, proximo2, *gr->tempoAtual);
 				}
 				else{
 					tempos[ini] = ++(*gr->tempoAtual);
@@ -243,7 +244,36 @@ class Grafo
 						}
 						//Colocando o vetor de cores
 						res->cores = coresRes;
+                        return res;
 				}
+
+                //Testando se o vertice atual ainda e cinza
+                if(cores[ini] == gr->cinza){
+                    tempos[ini] = ++(*gr->tempoAtual);
+                    cores[ini] = gr->preto;
+                }
+
+                //Buscando vertices brancos
+                for(int brancoRestante = 0; brancoRestante < gr->getNumVetices(); brancoRestante++){
+                    if(cores[brancoRestante] == gr->branco){
+                        Grafo::busca(gr, brancoRestante, *gr->tempoAtual);
+                        break;
+                    }
+                }
+
+                //Encerrando o método
+                    //Montando o objeto de resposta
+                    busca_response *res = new busca_response;
+                    //Colocando o vetor de tempos
+                    res->tempos = tempos;
+                    //Copiando o vetor de cores
+                    int *coresRes = new int[gr->getNumVetices()];
+                    for(int i = 0; i < gr->getNumVetices(); i++){
+                        coresRes[i] = cores[i];
+                    }
+                    //Colocando o vetor de cores
+                    res->cores = coresRes;
+                    return res;
 			}
 		}
 };
